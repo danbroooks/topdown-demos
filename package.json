@@ -1,0 +1,11 @@
+{
+  "name": "topdown-demos",
+  "version": "0.1.1",
+  "description": "Game demos for topdown.js",
+  "devDependencies": {
+  },
+  "dependencies": {
+    "topdown.js": "0.0.2",
+    "topdown-multiplayer": "0.0.1"
+  }
+}
