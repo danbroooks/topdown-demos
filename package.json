@@ -3,6 +3,10 @@
   "version": "0.1.1",
   "description": "Game demos for topdown.js",
   "devDependencies": {
+    "grunt-contrib-uglify": "~0.4.0",
+    "browserify": "~3.32.1",
+    "grunt-browserify": "~1.3.2",
+    "grunt-contrib-watch": "~0.6.0"
   },
   "dependencies": {
     "topdown.js": "0.0.2",
