@@ -1,27 +1,46 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"Pl9DfL":[function(require,module,exports){
 
-var obj = require('obj');
-var game = require('core/game');
-var Polygon = require('graphics/Polygon');
 
-var box = {};
+// Load dependencies
+
+var obj = require('obj');
+var Polygon = require('graphics/Polygon');
+var Actor = require('core/Actor');
+var game = require('core/game');
+
+
+
+
+
+// Constructor
 
 var Constructor = function(options){
 
   this.shape = Polygon(options);
 
+  game.controls.on('a').down(function(){
+    console.log('a');
+  }).up(function(){
+    console.log('a up');
+  });
 }
 
-box.move = function(x, y) {
-  // console.log(x, y);
-};
 
-box.rotate = function(r) {
-  // console.log(r);
-};
 
-box.render = function(gfx) {
-  gfx.render(this.shape);
+
+
+// Declare object literal
+
+var box = {};
+
+
+
+
+
+// Declare object literal
+
+box.update = function() {
+  this.rotate(-0.05);
 };
 
 
@@ -30,7 +49,7 @@ box.render = function(gfx) {
 
 // Create definition
 
-var Box = obj.define(Object, Constructor, box);
+var Box = obj.define(Actor, Constructor, box);
 
 
 
@@ -51,24 +70,43 @@ module.exports=require('Pl9DfL');
 var fn = require('fn');
 var game = require('core/game');
 
+var Point = require('graphics/Point');
+var Box = require('Box');
+
+
+var b = Box([
+  Point(200, 200),
+  Point(200, 300),
+  Point(400, 300),
+  Point(400, 200)
+]);
+
+b.teleport(600,200);
+
 
 game.render = function(delta, gfx){
 
-//   var i = game.tick;
-//   var s = Math.sin(i / 10) * 10;
-//   var c = Math.cos(i / 10) * 10;
+  var i = game.tick;
+  var s = Math.sin(i / 10) * 5;
+  var c = Math.cos(i / 10) * 5;
 
-//   gfx.text('hello', { x: ( s*10 ) + 200, y: ( (c/2)*10 ) + 200 });
+  gfx.clear();
 
-//   if (i % 300 === 0) {
-// //     game.shapes[0].move(s, c/2);
-//     game.shapes[0].render(gfx);
+  gfx.cling();
 
-// //     game.shapes[1].move(-s/2, -c);
-// //     game.shapes[1].rotate(0.01);
-//     game.shapes[1].render(gfx);
+  gfx.text('hello', { x: ( s*10 ) + 200, y: ( (c/2)*10 ) + 200 });
 
-//   }
+  b.render(gfx);
+  b.update();
+
+  gfx.draw([
+    Point(20, 20),
+    Point(20, 40),
+    Point(40, 40),
+    Point(40, 20)
+  ]);
+
+  // gfx.canvasStack.selected.camera.move(Point(s, c/2));
 
 };
 
@@ -78,13 +116,15 @@ game.update = function(gfx){
 
 
 
-},{}],"render":[function(require,module,exports){
+},{"Box":"Pl9DfL"}],"render":[function(require,module,exports){
 module.exports=require('IoK9oi');
 },{}],"7Jmxv/":[function(require,module,exports){
 
 var game = require('core/game');
 var Point = require('graphics/Point');
+var Camera = require('graphics/Camera');
 var Vector = require('graphics/Vector');
+var Polygon = require('graphics/Polygon');
 var Collision = require('graphics/Collision');
 
 
@@ -117,6 +157,40 @@ function CollisionTest(){
   PrintResult('CollisionTest', pass);
 };
 
+function StaticCollisionTest(){
+  var pass = true;
+
+  var a = Point(30, 30);
+
+  var test1 = Collision.areaContainsPoint([
+    Point(20, 20),
+    Point(20, 40),
+    Point(40, 40),
+    Point(40, 20)
+  ], a);
+
+  var test2 = Collision.areaContainsPoint(Polygon([
+    Point(20, 20),
+    Point(20, 40),
+    Point(40, 40),
+    Point(40, 20)
+  ]), a);
+
+  if (!test1 || !test2) {
+    pass = false;
+  }
+
+  PrintResult('StaticCollisionTest', pass);
+};
+
+function CameraTest(gfx) {
+  var pass = true;
+
+  // console.log(gfx.canvasStack.selected.camera);
+
+  PrintResult('CameraTest', pass);
+};
+
 game.beforeInit = function(config){
 
   config.addPrimaryCanvas('foreground');
@@ -134,8 +208,8 @@ game.afterInit = function(gfx){
   gfx.bindCameraToCanvas('secondary', 'background');
 
   CollisionTest();
-
-
+  StaticCollisionTest();
+  // CameraTest(gfx);
 }
 },{}],"script":[function(require,module,exports){
 module.exports=require('7Jmxv/');

@@ -1,7 +1,9 @@
 
 var game = require('core/game');
 var Point = require('graphics/Point');
+var Camera = require('graphics/Camera');
 var Vector = require('graphics/Vector');
+var Polygon = require('graphics/Polygon');
 var Collision = require('graphics/Collision');
 
 
@@ -34,6 +36,40 @@ function CollisionTest(){
   PrintResult('CollisionTest', pass);
 };
 
+function StaticCollisionTest(){
+  var pass = true;
+
+  var a = Point(30, 30);
+
+  var test1 = Collision.areaContainsPoint([
+    Point(20, 20),
+    Point(20, 40),
+    Point(40, 40),
+    Point(40, 20)
+  ], a);
+
+  var test2 = Collision.areaContainsPoint(Polygon([
+    Point(20, 20),
+    Point(20, 40),
+    Point(40, 40),
+    Point(40, 20)
+  ]), a);
+
+  if (!test1 || !test2) {
+    pass = false;
+  }
+
+  PrintResult('StaticCollisionTest', pass);
+};
+
+function CameraTest(gfx) {
+  var pass = true;
+
+  // console.log(gfx.canvasStack.selected.camera);
+
+  PrintResult('CameraTest', pass);
+};
+
 game.beforeInit = function(config){
 
   config.addPrimaryCanvas('foreground');
@@ -51,6 +87,6 @@ game.afterInit = function(gfx){
   gfx.bindCameraToCanvas('secondary', 'background');
 
   CollisionTest();
-
-
+  StaticCollisionTest();
+  // CameraTest(gfx);
 }

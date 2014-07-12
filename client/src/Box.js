@@ -1,26 +1,45 @@
 
-var obj = require('obj');
-var game = require('core/game');
-var Polygon = require('graphics/Polygon');
 
-var box = {};
+// Load dependencies
+
+var obj = require('obj');
+var Polygon = require('graphics/Polygon');
+var Actor = require('core/Actor');
+var game = require('core/game');
+
+
+
+
+
+// Constructor
 
 var Constructor = function(options){
 
   this.shape = Polygon(options);
 
+  game.controls.on('a').down(function(){
+    console.log('a');
+  }).up(function(){
+    console.log('a up');
+  });
 }
 
-box.move = function(x, y) {
-  // console.log(x, y);
-};
 
-box.rotate = function(r) {
-  // console.log(r);
-};
 
-box.render = function(gfx) {
-  gfx.render(this.shape);
+
+
+// Declare object literal
+
+var box = {};
+
+
+
+
+
+// Declare object literal
+
+box.update = function() {
+  this.rotate(-0.05);
 };
 
 
@@ -29,7 +48,7 @@ box.render = function(gfx) {
 
 // Create definition
 
-var Box = obj.define(Object, Constructor, box);
+var Box = obj.define(Actor, Constructor, box);
 
 
 
